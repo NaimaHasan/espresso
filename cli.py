@@ -1,5 +1,8 @@
 import typer
 import os
+from rich.console import Console
+from rich.table import Table
+
 from services.service import load_recipes, find_recipes_by_ingredients
 
 app = typer.Typer(no_args_is_help=True)
@@ -26,7 +29,6 @@ def load_added_ingredients():
     return set()
 
 
-# Global variable to store added ingredients
 added_ingredients = load_added_ingredients()
 
 
@@ -36,6 +38,7 @@ def add_ingredients(espresso: bool = typer.Option(False, "--espresso", help="Add
                     caramel: bool = typer.Option(False, "--caramel", help="Add Caramel"),
                     cream: bool = typer.Option(False, "--cream", help="Add Cream"),
                     sugar: bool = typer.Option(False, "--sugar", help="Add Sugar")):
+    """Add ingredients"""
     options = ["espresso", "milk", "caramel", "cream", "sugar"]
 
     for option in options:
@@ -52,6 +55,7 @@ def remove_ingredients(espresso: bool = typer.Option(False, "--espresso", help="
                        caramel: bool = typer.Option(False, "--caramel", help="Remove Caramel"),
                        cream: bool = typer.Option(False, "--cream", help="Remove Cream"),
                        sugar: bool = typer.Option(False, "--sugar", help="Remove Sugar")):
+    """Remove added ingredients"""
     options = ["espresso", "milk", "caramel", "cream", "sugar"]
 
     for option in options:
@@ -68,6 +72,7 @@ def remove_ingredients(espresso: bool = typer.Option(False, "--espresso", help="
 
 @app.command()
 def clear_ingredients():
+    """Clear added ingredients"""
     added_ingredients.clear()
     save_added_ingredients(added_ingredients)
     typer.echo("Added ingredients cleared.")
@@ -94,47 +99,57 @@ def show_ingredients():
 
 @app.command()
 def find_recipe_by_added_ingredients():
+    """Find recipe by added ingredients"""
     recipes = load_recipes()
     searched_recipes = find_recipes_by_ingredients(recipes, added_ingredients)
-    for recipe in searched_recipes:
-        typer.echo(f"ID: {recipe.id} Name: {recipe.name}")
+    display_recipes(searched_recipes)
 
 
 @app.command()
-def show_all_recipes():
+def find_all_recipes():
     """List all recipes"""
     recipes = load_recipes()
     typer.echo("All Recipes:")
+    display_recipes(recipes)
+
+
+def display_recipes(recipes):
+    console = Console()
+    table = Table("ID", "Name")
+
     for recipe in recipes:
-        typer.echo(f"ID: {recipe.id} Name: {recipe.name}")
+        table.add_row(str(recipe.id), recipe.name)
+
+    console.print(table)
 
 
 @app.command()
-def view_recipe_by_id(recipe_id: int):
-    """View a specific recipe by ID"""
+def find_recipe_by_id(recipe_id: int):
+    """Find a specific recipe by ID"""
     recipes = load_recipes()
-    display_recipe(recipe_id, recipes)
 
-
-def display_recipe(recipe_id, recipes):
     for recipe in recipes:
         if recipe.id == recipe_id:
-            print(f"{bold('Recipe Name')}: {recipe.name}\n")
+            display_recipe(recipe)
 
-            print(f"{bold('Category')}: {recipe.category}\n")
 
-            print(f"{bold('Description')}: {recipe.description}\n")
+def display_recipe(recipe):
+    console = Console()
 
-            print(f"{bold('Ingredients')}:")
-            for ingredient in recipe.ingredients:
-                print(f"- {ingredient['name']}: {ingredient['quantity']}")
+    table = Table("Name", "Description")
 
-            print(f"\n{bold('Steps')}:")
-            for step in recipe.steps:
-                print(f"{step['number']}. {step['description']}\n")
-            return
+    table.add_row("Name", recipe.name)
+    table.add_row("Category", recipe.category)
+    table.add_row("Description", recipe.description)
 
-    print("Recipe not found.")
+    ingredients_str = "\n".join(
+        [f"- {ingredient['name']}: {ingredient['quantity']}" for ingredient in recipe.ingredients])
+    table.add_row("Ingredients", ingredients_str)
+
+    steps_str = "\n".join([f"{step['number']}. {step['description']}" for step in recipe.steps])
+    table.add_row("Steps", steps_str)
+
+    console.print(table)
 
 
 if __name__ == "__main__":
