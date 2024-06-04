@@ -1,3 +1,5 @@
+"""Module containing functions for managing ingredients"""
+
 import os
 
 recipe_url = "http://naima-hasan-espresso-json.vercel.app/db"

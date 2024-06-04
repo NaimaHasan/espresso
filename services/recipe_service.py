@@ -1,8 +1,9 @@
+"""Module containing functions for managing recipes."""
+
 import requests
 from models.recipe import Recipe
 from rich.console import Console
 from rich.table import Table
-import os
 
 recipe_url = "http://naima-hasan-espresso-json.vercel.app/db"
 storage_file = "added_ingredients.txt"

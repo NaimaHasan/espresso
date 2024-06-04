@@ -1,7 +1,13 @@
+"""Espresso
+
+This Python application helps you manage your coffee ingredients and find recipes based on what you have on hand.
+"""
+
 import typer
 import services.ingredient_service as ingredient_service
 import services.recipe_service as recipe_service
 
+# Create a Typer application with help message displayed when no arguments provided
 app = typer.Typer(no_args_is_help=True)
 
 ingredients = [
@@ -11,6 +17,7 @@ ingredients = [
     "Cream",
     "Sugar"
 ]
+
 
 added_ingredients = ingredient_service.load_added_ingredients()
 
@@ -38,7 +45,7 @@ def find_recipe_by_id(recipe_id: int):
 
 
 @app.command()
-def add_ingredients(espresso: bool = typer.Option(False, "--espresso", help="Add Espresso"),
+def add_ingredient(espresso: bool = typer.Option(False, "--espresso", help="Add Espresso"),
                     milk: bool = typer.Option(False, "--milk", help="Add Milk"),
                     caramel: bool = typer.Option(False, "--caramel", help="Add Caramel"),
                     cream: bool = typer.Option(False, "--cream", help="Add Cream"),
@@ -54,7 +61,7 @@ def add_ingredients(espresso: bool = typer.Option(False, "--espresso", help="Add
 
 
 @app.command()
-def remove_ingredients(espresso: bool = typer.Option(False, "--espresso", help="Remove Espresso"),
+def remove_ingredient(espresso: bool = typer.Option(False, "--espresso", help="Remove Espresso"),
                        milk: bool = typer.Option(False, "--milk", help="Remove Milk"),
                        caramel: bool = typer.Option(False, "--caramel", help="Remove Caramel"),
                        cream: bool = typer.Option(False, "--cream", help="Remove Cream"),

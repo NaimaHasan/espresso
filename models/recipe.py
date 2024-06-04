@@ -1,4 +1,20 @@
+"""Recipe Class
+
+This class represents a recipe with its ingredients and instructions.
+"""
+
 class Recipe:
+    """
+    A recipe object containing its details and functionalities.
+
+    Args:
+        id (int): The unique identifier of the recipe.
+        name (str): The name of the recipe.
+        category (str): The category of the recipe (e.g., breakfast, dessert).
+        description (str): A description of the recipe.
+        ingredients (list): A list of dictionaries representing ingredients (e.g., [{'name': 'Espresso', 'quantity': 1}]).
+        steps (list): A list of strings representing the recipe steps.
+    """
     def __init__(self, id, name, category, description, ingredients, steps):
         self.id = id
         self.name = name
