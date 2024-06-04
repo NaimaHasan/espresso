@@ -2,14 +2,20 @@
 
 import os
 
-recipe_url = "http://naima-hasan-espresso-json.vercel.app/db"
 storage_file = "added_ingredients.txt"
 
 
 def load_added_ingredients():
     if os.path.exists(storage_file):
         with open(storage_file, "r") as file:
-            return {line.strip() for line in file.readlines()}
+            lines = file.readlines()
+            added_ingredients = set()
+
+            for line in lines:
+                stripped_line = line.strip()
+                added_ingredients.add(stripped_line)
+            return added_ingredients
+
     return set()
 
 
@@ -21,7 +27,13 @@ def save_added_ingredients(added_ingredients):
 
 def find_recipes_by_ingredients(recipes, ingredient_names):
     ingredient_names = {name.lower() for name in ingredient_names}
-    return [recipe for recipe in recipes if recipe.has_ingredients(ingredient_names)]
+    searched_recipes = []
+
+    for recipe in recipes:
+        if recipe.has_ingredients(ingredient_names):
+            searched_recipes.append(recipe)
+
+    return searched_recipes
 
 
 def display_ingredients(ingredients, added_ingredients):

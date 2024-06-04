@@ -27,5 +27,10 @@ class Recipe:
         return f"Recipe ID: {self.id}, Name: {self.name}, Category: {self.category}"
 
     def has_ingredients(self, ingredient_names):
-        recipe_ingredient_names = {ingredient['name'].lower() for ingredient in self.ingredients}
+        recipe_ingredient_names = set()
+
+        for ingredient in self.ingredients:
+            ingredient_name = ingredient['name']
+            recipe_ingredient_names.add(ingredient_name.lower())
+
         return recipe_ingredient_names.issuperset(ingredient_names)

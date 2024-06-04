@@ -8,7 +8,6 @@ import services.ingredient_service as ingredient_service
 import services.recipe_service as recipe_service
 from typing_extensions import Annotated
 
-
 # Create a Typer application with help message displayed when no arguments provided
 app = typer.Typer(no_args_is_help=True)
 
@@ -37,10 +36,15 @@ def find_recipe_by_id(recipe_id: int):
     """Find a specific recipe by ID"""
 
     recipes = recipe_service.load_recipes()
-    recipe = next((recipe for recipe in recipes if recipe.id == recipe_id), None)
+    found_recipe = None
 
-    if recipe is not None:
-        recipe_service.display_recipe(recipe)
+    for recipe in recipes:
+        if recipe.id == recipe_id:
+            found_recipe = recipe
+            break
+
+    if found_recipe is not None:
+        recipe_service.display_recipe(found_recipe)
     else:
         typer.echo(f"Recipe with ID {recipe_id} not found.")
 
@@ -59,15 +63,14 @@ def add_ingredient(ingredient_name: Annotated[str, typer.Option(prompt=True)]):
 
 
 @app.command()
-def remove_ingredient(ingredient_name: Annotated[str, typer.Option(prompt=True)],):
+def remove_ingredient(ingredient_name: Annotated[str, typer.Option(prompt=True)], ):
     """Remove added ingredients"""
 
-    if ingredient_name.capitalize() in ingredients:
-        if ingredient_name.capitalize() in added_ingredients:
-            added_ingredients.remove(ingredient_name.capitalize())
-            typer.echo(f"Removed ingredient: {ingredient_name.capitalize()}")
-        else:
-            typer.echo(f"{ingredient_name.capitalize()} is not in the added ingredients.\n")
+    if ingredient_name.capitalize() in ingredients and ingredient_name.capitalize() in added_ingredients:
+        added_ingredients.remove(ingredient_name.capitalize())
+        typer.echo(f"Removed ingredient: {ingredient_name.capitalize()}")
+    else:
+        typer.echo(f"{ingredient_name.capitalize()} is not in the added ingredients.\n")
 
     ingredient_service.save_added_ingredients(added_ingredients)
     ingredient_service.display_ingredients(ingredients, added_ingredients)

@@ -6,7 +6,6 @@ from rich.console import Console
 from rich.table import Table
 
 recipe_url = "http://naima-hasan-espresso-json.vercel.app/db"
-storage_file = "added_ingredients.txt"
 
 
 def load_recipes():
