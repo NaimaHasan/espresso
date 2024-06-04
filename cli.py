@@ -6,6 +6,8 @@ This Python application helps you manage your coffee ingredients and find recipe
 import typer
 import services.ingredient_service as ingredient_service
 import services.recipe_service as recipe_service
+from typing_extensions import Annotated
+
 
 # Create a Typer application with help message displayed when no arguments provided
 app = typer.Typer(no_args_is_help=True)
@@ -17,7 +19,6 @@ ingredients = [
     "Cream",
     "Sugar"
 ]
-
 
 added_ingredients = ingredient_service.load_added_ingredients()
 
@@ -45,36 +46,28 @@ def find_recipe_by_id(recipe_id: int):
 
 
 @app.command()
-def add_ingredient(espresso: bool = typer.Option(False, "--espresso", help="Add Espresso"),
-                    milk: bool = typer.Option(False, "--milk", help="Add Milk"),
-                    caramel: bool = typer.Option(False, "--caramel", help="Add Caramel"),
-                    cream: bool = typer.Option(False, "--cream", help="Add Cream"),
-                    sugar: bool = typer.Option(False, "--sugar", help="Add Sugar")):
+def add_ingredient(ingredient_name: Annotated[str, typer.Option(prompt=True)]):
     """Add ingredients"""
 
-    for option in ingredients:
-        if vars()[option.lower()]:
-            added_ingredients.add(option)
+    if ingredient_name.capitalize() in ingredients:
+        added_ingredients.add(ingredient_name.capitalize())
+    else:
+        typer.echo("Ingredient not available\n")
 
     ingredient_service.save_added_ingredients(added_ingredients)
     ingredient_service.display_ingredients(ingredients, added_ingredients)
 
 
 @app.command()
-def remove_ingredient(espresso: bool = typer.Option(False, "--espresso", help="Remove Espresso"),
-                       milk: bool = typer.Option(False, "--milk", help="Remove Milk"),
-                       caramel: bool = typer.Option(False, "--caramel", help="Remove Caramel"),
-                       cream: bool = typer.Option(False, "--cream", help="Remove Cream"),
-                       sugar: bool = typer.Option(False, "--sugar", help="Remove Sugar")):
+def remove_ingredient(ingredient_name: Annotated[str, typer.Option(prompt=True)],):
     """Remove added ingredients"""
 
-    for option in ingredients:
-        if vars()[option.lower()]:
-            if option in added_ingredients:
-                added_ingredients.remove(option)
-                typer.echo(f"Removed ingredient: {option}")
-            else:
-                typer.echo(f"{option} is not in the added ingredients.")
+    if ingredient_name.capitalize() in ingredients:
+        if ingredient_name.capitalize() in added_ingredients:
+            added_ingredients.remove(ingredient_name.capitalize())
+            typer.echo(f"Removed ingredient: {ingredient_name.capitalize()}")
+        else:
+            typer.echo(f"{ingredient_name.capitalize()} is not in the added ingredients.\n")
 
     ingredient_service.save_added_ingredients(added_ingredients)
     ingredient_service.display_ingredients(ingredients, added_ingredients)
