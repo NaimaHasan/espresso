@@ -1,5 +1,6 @@
 import typer
-import services.service as service
+import services.ingredient_service as ingredient_service
+import services.recipe_service as recipe_service
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -11,28 +12,27 @@ ingredients = [
     "Sugar"
 ]
 
-added_ingredients = service.load_added_ingredients()
+added_ingredients = ingredient_service.load_added_ingredients()
 
 
 @app.command()
 def find_all_recipes():
     """List all recipes"""
 
-    recipes = service.load_recipes()
+    recipes = recipe_service.load_recipes()
     typer.echo("All Recipes:")
-    service.display_recipe_list(recipes)
+    recipe_service.display_recipe_list(recipes)
 
 
 @app.command()
 def find_recipe_by_id(recipe_id: int):
     """Find a specific recipe by ID"""
 
-    recipes = service.load_recipes()
-
+    recipes = recipe_service.load_recipes()
     recipe = next((recipe for recipe in recipes if recipe.id == recipe_id), None)
 
     if recipe is not None:
-        service.display_recipe(recipe)
+        recipe_service.display_recipe(recipe)
     else:
         typer.echo(f"Recipe with ID {recipe_id} not found.")
 
@@ -49,8 +49,8 @@ def add_ingredients(espresso: bool = typer.Option(False, "--espresso", help="Add
         if vars()[option.lower()]:
             added_ingredients.add(option)
 
-    service.save_added_ingredients(added_ingredients)
-    service.display_ingredients(ingredients, added_ingredients)
+    ingredient_service.save_added_ingredients(added_ingredients)
+    ingredient_service.display_ingredients(ingredients, added_ingredients)
 
 
 @app.command()
@@ -69,8 +69,8 @@ def remove_ingredients(espresso: bool = typer.Option(False, "--espresso", help="
             else:
                 typer.echo(f"{option} is not in the added ingredients.")
 
-    service.save_added_ingredients(added_ingredients)
-    service.display_ingredients(ingredients, added_ingredients)
+    ingredient_service.save_added_ingredients(added_ingredients)
+    ingredient_service.display_ingredients(ingredients, added_ingredients)
 
 
 @app.command()
@@ -78,7 +78,7 @@ def clear_ingredients():
     """Clear added ingredients"""
 
     added_ingredients.clear()
-    service.save_added_ingredients(added_ingredients)
+    ingredient_service.save_added_ingredients(added_ingredients)
     typer.echo("Added ingredients cleared.")
 
 
@@ -86,13 +86,13 @@ def clear_ingredients():
 def find_recipe_by_added_ingredients():
     """Find recipe by added ingredients"""
 
-    recipes = service.load_recipes()
-    searched_recipes = service.find_recipes_by_ingredients(recipes, added_ingredients)
+    recipes = recipe_service.load_recipes()
+    searched_recipes = ingredient_service.find_recipes_by_ingredients(recipes, added_ingredients)
 
     if not searched_recipes:
         print("No recipes found.")
     else:
-        service.display_recipe_list(searched_recipes)
+        recipe_service.display_recipe_list(searched_recipes)
 
 
 if __name__ == "__main__":
