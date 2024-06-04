@@ -1,6 +1,8 @@
 """Module containing functions for managing recipes."""
 
 import requests
+import typer
+
 from models.recipe import Recipe
 from rich.console import Console
 from rich.table import Table
@@ -18,7 +20,7 @@ def load_recipes():
         return recipes
 
     except requests.RequestException as e:
-        print(f"Failed to fetch recipes: {e}")
+        typer.echo(f"Failed to fetch recipes: {e}")
         raise
 
 

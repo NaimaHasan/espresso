@@ -93,7 +93,7 @@ def find_recipe_by_added_ingredients():
     searched_recipes = ingredient_service.find_recipes_by_ingredients(recipes, added_ingredients)
 
     if not searched_recipes:
-        print("No recipes found.")
+        typer.echo("No recipes found.")
     else:
         recipe_service.display_recipe_list(searched_recipes)
 

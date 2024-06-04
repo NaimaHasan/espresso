@@ -2,6 +2,8 @@
 
 import os
 
+import typer
+
 storage_file = "added_ingredients.txt"
 
 
@@ -37,13 +39,13 @@ def find_recipes_by_ingredients(recipes, ingredient_names):
 
 
 def display_ingredients(ingredients, added_ingredients):
-    print(f"Available Ingredients:")
+    typer.echo(f"Available Ingredients:")
     for index, ingredient in enumerate(ingredients, start=1):
-        print(f"{index}. {ingredient}")
+        typer.echo(f"{index}. {ingredient}")
 
     if added_ingredients:
-        print("\nAdded Ingredients:")
+        typer.echo("\nAdded Ingredients:")
         for index, ingredient in enumerate(added_ingredients, start=1):
-            print(f"{index}. {ingredient}")
+            typer.echo(f"{index}. {ingredient}")
     else:
-        print("\nNo ingredients added.")
+        typer.echo("\nNo ingredients added.")
