@@ -7,6 +7,8 @@ from models.recipe import Recipe
 from rich.console import Console
 from rich.table import Table
 
+from services import ingredient_service
+
 recipe_url = "http://naima-hasan-espresso-json.vercel.app/db"
 
 
@@ -36,22 +38,49 @@ def create_recipe_from_data(data):
 
 
 def display_recipe(recipe):
+    ingredients_str = convert_ingredient_to_string(recipe.ingredients)
+    steps_str = convert_steps_to_string(recipe.steps)
+
+    fields = [
+        ("Name", recipe.name),
+        ("Category", recipe.category),
+        ("Description", recipe.description),
+        ("Ingredients", ingredients_str),
+        ("Steps", steps_str),
+    ]
+
     console = Console()
 
     table = Table("Name", "Description")
 
-    table.add_row("Name", recipe.name)
-    table.add_row("Category", recipe.category)
-    table.add_row("Description", recipe.description)
-
-    ingredients_str = "\n".join(
-        [f"- {ingredient['name']}: {ingredient['quantity']}" for ingredient in recipe.ingredients])
-    table.add_row("Ingredients", ingredients_str)
-
-    steps_str = "\n".join([f"{step['number']}. {step['description']}" for step in recipe.steps])
-    table.add_row("Steps", steps_str)
+    for field_name, field_value in fields:
+        table.add_row(field_name, field_value)
 
     console.print(table)
+
+
+def convert_ingredient_to_string(ingredients):
+    ingredients_list = []
+
+    for ingredient in ingredients:
+        ingredient_str = f"- {ingredient['name']}: {ingredient['quantity']}"
+        ingredients_list.append(ingredient_str)
+
+    ingredients_str = "\n".join(ingredients_list)
+
+    return ingredients_str
+
+
+def convert_steps_to_string(steps):
+    step_list = []
+
+    for step in steps:
+        step_str = f"{step['number']}. {step['description']}"
+        step_list.append(step_str)
+
+    steps_str = "\n".join(step_list)
+
+    return steps_str
 
 
 def display_recipe_list(recipes):
@@ -64,4 +93,21 @@ def display_recipe_list(recipes):
     console.print(table)
 
 
+def find_recipe_by_id(recipe_id):
+    recipes = load_recipes()
 
+    for recipe in recipes:
+        if recipe.id == recipe_id:
+            return recipe
+
+
+def find_recipes_by_added_ingredients():
+    recipes = load_recipes()
+    added_ingredients = ingredient_service.load_added_ingredients()
+    searched_recipes = []
+
+    for recipe in recipes:
+        if recipe.has_ingredients(added_ingredients):
+            searched_recipes.append(recipe)
+
+    return searched_recipes
