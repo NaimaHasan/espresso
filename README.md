@@ -1,5 +1,3 @@
-You're absolutely right! Installing dependencies using a `requirements.txt` file is a more robust and standardized approach compared to relying solely on `pip install` within the README. Here's an improved version incorporating `requirements.txt`:
-
 ## Espresso: Coffee Ingredient Management and Recipe Discovery
 
 This Python application empowers you to manage your coffee ingredients and discover recipes based on what you have available.
