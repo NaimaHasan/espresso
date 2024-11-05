@@ -1,11 +1,11 @@
 ## Espresso: Coffee Ingredient Management and Recipe Discovery
 
-This Python application empowers you to manage your coffee ingredients and discover recipes based on what you have available.
+A Python CLI application to discover coffee recipes based on what ingredients you have available.
 
 ### Features
 
-* **Inventory Management:**
-  * Add, remove, and clear ingredients from your inventory.
+* **Ingredient Management:**
+  * Add, remove, and clear ingredients.
   * Keep track of your coffee supplies.
 * **Recipe Exploration:**
   * List all available coffee recipes.
@@ -14,11 +14,11 @@ This Python application empowers you to manage your coffee ingredients and disco
 
 ### Usage
 
-This application leverages the Typer library for a user-friendly command-line interface.
+This application uses the Typer library for a user-friendly command-line interface.
 
 **1. Setting Up Your Development Environment:**
 
-Before diving in, ensure you have Python installed. Here's how to create a virtual environment and install dependencies using a `requirements.txt` file:
+Before starting, ensure you have Python installed. You can then create a virtual environment and install dependencies from the `requirements.txt` file:
 
 **a. Create a virtual environment (recommended):**
 
@@ -52,11 +52,7 @@ Replace `<venv_name>` with your desired name (e.g., `espresso_env`).
 source <venv_name>/bin/activate
 ```
 
-**c. Create a requirements.txt file:**
-
-- List all necessary dependencies in this file, one per line (e.g., `typer`).
-
-**d. Install dependencies:**
+**c. Install dependencies:**
 
 Within the activated virtual environment, run:
 
@@ -93,5 +89,3 @@ This application utilizes two services:
 * `recipe_service`: Handles loading, displaying, and searching for recipes.
 
 **Feel free to contribute or raise issues on this repository!**
-
-This enhanced README emphasizes the importance of `requirements.txt`. It guides users through creating the file, installing dependencies using `pip install -r requirements.txt`, and maintains the existing content about the application itself.
